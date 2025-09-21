@@ -21,7 +21,8 @@ APIS=(
  
 # ====== STEP 1: Get projects under folder ======
 echo "Fetching all projects under folder $FOLDER_ID ..."
-PROJECTS=$(gcloud projects list --filter="parent.id=$FOLDER_ID" --format="value(projectId)")
+PROJECTS="dummy-project-1 dummy-project-2"
+
  
 # ====== STEP 2: Loop projects ======
 for PROJECT in $PROJECTS; do
