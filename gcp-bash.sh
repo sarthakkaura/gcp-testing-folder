@@ -15,6 +15,10 @@ AZ_LOCATION="eastus"
 CSPM_SA="microsoft-defender-cspm@$PROJECT.iam.gserviceaccount.com"
 DEFENDER_SA="microsoft-defender-for-servers@$PROJECT.iam.gserviceaccount.com"
 
+# Workload Identity Provider IDs (full resource paths)
+CSPM_PROVIDER_ID="projects/93604753456/locations/global/workloadIdentityPools/mdc-workload-identity-pool/providers/cspm"
+DEFENDER_PROVIDER_ID="projects/93604753456/locations/global/workloadIdentityPools/mdc-workload-identity-pool/providers/defender-for-servers"
+
 # ====== STEP: Create Defender connector in Azure ======
 CONNECTOR_NAME="gcp-${PROJECT}"
 
@@ -41,14 +45,14 @@ BODY=$(cat <<EOF
         "offeringType": "CspmMonitorGcp",
         "nativeCloudConnection": {
           "serviceAccountEmailAddress": "$CSPM_SA",
-          "workloadIdentityProviderId": "cspm"
+          "workloadIdentityProviderId": "$CSPM_PROVIDER_ID"
         }
       },
       {
         "offeringType": "DefenderForServersGcp",
         "defenderForServers": {
           "serviceAccountEmailAddress": "$DEFENDER_SA",
-          "workloadIdentityProviderId": "defender-for-servers"
+          "workloadIdentityProviderId": "$DEFENDER_PROVIDER_ID"
         },
         "mdeAutoProvisioning": {
           "enabled": true,
