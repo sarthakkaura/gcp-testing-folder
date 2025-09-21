@@ -14,7 +14,6 @@ AZ_LOCATION="eastus"
 # Service Accounts
 CSPM_SA="microsoft-defender-cspm@$PROJECT.iam.gserviceaccount.com"
 DEFENDER_SA="microsoft-defender-for-servers@$PROJECT.iam.gserviceaccount.com"
-AGENTLESS_SA="microsoft-defender-agentless@$PROJECT.iam.gserviceaccount.com"  # Ensure this exists
 
 # ====== STEP: Create Defender connector in Azure ======
 CONNECTOR_NAME="gcp-${PROJECT}"
@@ -58,14 +57,6 @@ BODY=$(cat <<EOF
         "arcAutoProvisioning": {
           "enabled": true,
           "configuration": {}
-        },
-        "vmScanners": {
-          "enabled": true,
-          "configuration": {
-            "cloudRoleArn": "projects/$FOLDER_ID/serviceAccounts/$AGENTLESS_SA",
-            "scanningMode": "Default",
-            "exclusionTags": {}
-          }
         },
         "subPlan": "P2"
       }
