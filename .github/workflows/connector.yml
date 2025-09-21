@@ -1,36 +1,53 @@
-# This is a basic workflow to help you get started with Actions
+name: Onboard GCP Projects to Defender for Cloud
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:  # Manual trigger from GitHub UI
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  onboard:
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    env:
+      FOLDER_ID: "93604753456"
+      SA_EMAIL: "microsoft-defender-for-servers@sbx-sentinel-mde-dev-920788.iam.gserviceaccount.com"
+      AZ_SUBSCRIPTION: "f2e26c0b-8b27-4edd-b6f4-73edc39a4186"
+      AZ_RG: "kpmg-testing"
+      AZ_LOCATION: "eastus"
+
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+    - name: Install Google Cloud CLI
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y apt-transport-https ca-certificates gnupg
+        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+        curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+        sudo apt-get update && sudo apt-get install -y google-cloud-sdk
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+    - name: Authenticate to GCP
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
+      run: |
+        echo "${GOOGLE_APPLICATION_CREDENTIALS}" > gcp-key.json
+        gcloud auth activate-service-account --key-file=gcp-key.json
+        project sbx-sentinel-mde-dev-920788
+
+    - name: Install Azure CLI
+      run: |
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+    - name: Login to Azure
+      run: |
+        az login --service-principal \
+          --username ${{ secrets.AZURE_CLIENT_ID }} \
+          --password ${{ secrets.AZURE_CLIENT_SECRET }} \
+          --tenant ${{ secrets.AZURE_TENANT_ID }}
+        az account set --subscription $AZ_SUBSCRIPTION
+
+    - name: Make script executable
+      run: chmod +x gcp-bash.sh
+
+    - name: Run onboarding script
+      run: ./onboard_gcp_defender.sh
