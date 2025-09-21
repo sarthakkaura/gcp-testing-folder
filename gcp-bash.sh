@@ -15,10 +15,6 @@ AZ_LOCATION="eastus"
 CSPM_SA="microsoft-defender-cspm@$PROJECT.iam.gserviceaccount.com"
 DEFENDER_SA="microsoft-defender-for-servers@$PROJECT.iam.gserviceaccount.com"
 
-# Workload Identity Provider IDs (short names only — NOT full resource paths)
-CSPM_PROVIDER_ID="cspm"
-DEFENDER_PROVIDER_ID="defender-for-servers"
-
 # ====== STEP: Create Defender connector in Azure ======
 CONNECTOR_NAME="gcp-${PROJECT}"
 
@@ -27,7 +23,7 @@ AZ_TOKEN=$(az account get-access-token --resource https://management.azure.com \
   --query accessToken -o tsv)
 
 # JSON body for connector
-read -r -d '' BODY <<EOF
+BODY=$(cat <<EOF
 {
   "location": "$AZ_LOCATION",
   "properties": {
@@ -45,14 +41,14 @@ read -r -d '' BODY <<EOF
         "offeringType": "CspmMonitorGcp",
         "nativeCloudConnection": {
           "serviceAccountEmailAddress": "$CSPM_SA",
-          "workloadIdentityProviderId": "$CSPM_PROVIDER_ID"
+          "workloadIdentityProviderId": "cspm"
         }
       },
       {
         "offeringType": "DefenderForServersGcp",
         "defenderForServers": {
           "serviceAccountEmailAddress": "$DEFENDER_SA",
-          "workloadIdentityProviderId": "$DEFENDER_PROVIDER_ID"
+          "workloadIdentityProviderId": "defender-for-servers"
         },
         "mdeAutoProvisioning": {
           "enabled": true,
@@ -68,6 +64,7 @@ read -r -d '' BODY <<EOF
   }
 }
 EOF
+)
 
 # Call Azure REST API
 echo "Creating connector $CONNECTOR_NAME in Azure ..."
