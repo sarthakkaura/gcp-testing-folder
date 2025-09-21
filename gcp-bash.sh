@@ -15,9 +15,9 @@ AZ_LOCATION="eastus"
 CSPM_SA="microsoft-defender-cspm@$PROJECT.iam.gserviceaccount.com"
 DEFENDER_SA="microsoft-defender-for-servers@$PROJECT.iam.gserviceaccount.com"
 
-# Workload Identity Provider IDs (full resource paths)
-CSPM_PROVIDER_ID="projects/93604753456/locations/global/workloadIdentityPools/mdc-workload-identity-pool/providers/cspm"
-DEFENDER_PROVIDER_ID="projects/93604753456/locations/global/workloadIdentityPools/mdc-workload-identity-pool/providers/defender-for-servers"
+# Workload Identity Provider IDs (short names only — NOT full resource paths)
+CSPM_PROVIDER_ID="cspm"
+DEFENDER_PROVIDER_ID="defender-for-servers"
 
 # ====== STEP: Create Defender connector in Azure ======
 CONNECTOR_NAME="gcp-${PROJECT}"
@@ -52,30 +52,4 @@ BODY=$(cat <<EOF
         "offeringType": "DefenderForServersGcp",
         "defenderForServers": {
           "serviceAccountEmailAddress": "$DEFENDER_SA",
-          "workloadIdentityProviderId": "$DEFENDER_PROVIDER_ID"
-        },
-        "mdeAutoProvisioning": {
-          "enabled": true,
-          "configuration": {}
-        },
-        "arcAutoProvisioning": {
-          "enabled": true,
-          "configuration": {}
-        },
-        "subPlan": "P2"
-      }
-    ]
-  }
-}
-EOF
-)
-
-# Call Azure REST API
-echo "Creating connector $CONNECTOR_NAME in Azure ..."
-curl -s -X PUT \
-  -H "Authorization: Bearer $AZ_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d "$BODY" \
-  "https://management.azure.com/subscriptions/$AZ_SUBSCRIPTION/resourceGroups/$AZ_RG/providers/Microsoft.Security/securityConnectors/$CONNECTOR_NAME?api-version=2023-10-01-preview"
-
-echo "✅ Connector created for project $PROJECT"
+         
