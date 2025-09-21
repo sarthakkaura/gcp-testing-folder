@@ -18,12 +18,6 @@ PROJECTS="dummy-project-1 dummy-project-2"
 for PROJECT in $PROJECTS; do
   echo "=== Onboarding project: $PROJECT ==="
 
-  # Skipping GCP API enablement for testing
-  # for api in "${APIS[@]}"; do
-  #   gcloud services enable "$api" --project "$PROJECT" || true
-  # done
-
-  # ====== STEP 3: Create Defender connector in Azure ======
   CONNECTOR_NAME="gcp-${PROJECT}"
 
   # Get Azure auth token
@@ -43,7 +37,33 @@ for PROJECT in $PROJECTS; do
         "projectId": "$PROJECT",
         "serviceAccountEmailAddress": "$SA_EMAIL"
       }
-    }
+    },
+    "offerings": [
+      {
+        "offeringType": "DefenderForServersGcp",
+        "defenderForServers": {
+          "serviceAccountEmailAddress": "$SA_EMAIL",
+          "workloadIdentityProviderId": "defender-for-servers"
+        },
+        "mdeAutoProvisioning": {
+          "enabled": true,
+          "configuration": {}
+        },
+        "arcAutoProvisioning": {
+          "enabled": true,
+          "configuration": {}
+        },
+        "vmScanners": {
+          "enabled": true,
+          "configuration": {
+            "cloudRoleArn": "projects/$FOLDER_ID/serviceAccounts/microsoft-defender-agentless@$PROJECT.iam.gserviceaccount.com",
+            "scanningMode": "Default",
+            "exclusionTags": {}
+          }
+        },
+        "subPlan": "P2"
+      }
+    ]
   }
 }
 EOF
