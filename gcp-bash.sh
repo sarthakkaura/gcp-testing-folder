@@ -40,6 +40,13 @@ for PROJECT in $PROJECTS; do
     },
     "offerings": [
       {
+        "offeringType": "CspmMonitorGcp",
+        "nativeCloudConnection": {
+          "serviceAccountEmailAddress": "microsoft-defender-cspm@$PROJECT.iam.gserviceaccount.com",
+          "workloadIdentityProviderId": "cspm"
+        }
+      },
+      {
         "offeringType": "DefenderForServersGcp",
         "defenderForServers": {
           "serviceAccountEmailAddress": "$SA_EMAIL",
