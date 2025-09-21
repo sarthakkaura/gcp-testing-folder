@@ -7,6 +7,12 @@ jobs:
   onboard:
     runs-on: ubuntu-latest
 
+    
+    permissions:
+          contents: read
+          id-token: write 
+
+
     env:
       FOLDER_ID: "93604753456"
       SA_EMAIL: "microsoft-defender-for-servers@sbx-sentinel-mde-dev-920788.iam.gserviceaccount.com"
