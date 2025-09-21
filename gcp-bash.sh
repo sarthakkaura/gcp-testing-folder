@@ -64,7 +64,8 @@ EOF
    -H "Authorization: Bearer $AZ_TOKEN" \
    -H "Content-Type: application/json" \
    -d "$BODY" \
-   "https://management.azure.com/subscriptions/$AZ_SUBSCRIPTION/resourceGroups/$AZ_RG/providers/Microso…"
+   ""https://management.azure.com/subscriptions/$AZ_SUBSCRIPTION/resourceGroups/$AZ_RG/providers/Microsoft.Security/securityConnectors/$CONNECTOR_NAME`?api-version=2023-10-01-preview"
+"
  
  echo "✅ Connector created for project $PROJECT"
 done
