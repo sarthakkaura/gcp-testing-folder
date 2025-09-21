@@ -5,7 +5,7 @@
 set -euo pipefail
 
 # ====== CONFIG ======
-FOLDER_ID="93604753456" # e.g. 123456789012
+FOLDER_ID="93604753456" # Dummy folder ID for testing
 SA_EMAIL="microsoft-defender-for-servers@sbx-sentinel-mde-dev-920788.iam.gserviceaccount.com"
 AZ_SUBSCRIPTION="f2e26c0b-8b27-4edd-b6f4-73edc39a4186"
 AZ_RG="kpmg-testing"
@@ -33,8 +33,9 @@ for PROJECT in $PROJECTS; do
   # JSON body for connector
   BODY=$(cat <<EOF
 {
+  "location": "$AZ_LOCATION",
   "properties": {
-    "hierarchyIdentifier": "93604753456"
+    "hierarchyIdentifier": "$FOLDER_ID",
     "environmentName": "GCP",
     "environmentData": {
       "environmentType": "GcpProject",
@@ -43,8 +44,7 @@ for PROJECT in $PROJECTS; do
         "serviceAccountEmailAddress": "$SA_EMAIL"
       }
     }
-  },
-  "location": "$AZ_LOCATION"
+  }
 }
 EOF
 )
