@@ -5,10 +5,10 @@
 set -euo pipefail
  
 # ====== CONFIG ======
-FOLDER_ID="<YOUR_FOLDER_ID>" # e.g. 123456789012
-SA_EMAIL="defender-sa@security-project.iam.gserviceaccount.com"
-AZ_SUBSCRIPTION="<AZURE_SUBSCRIPTION_ID>"
-AZ_RG="<AZURE_RESOURCE_GROUP>"
+FOLDER_ID="93604753456" # e.g. 123456789012
+SA_EMAIL="microsoft-defender-for-servers@sbx-sentinel-mde-dev-920788.iam.gserviceaccount.com"
+AZ_SUBSCRIPTION="f2e26c0b-8b27-4edd-b6f4-73edc39a4186"
+AZ_RG="kpmg-testing"
 AZ_LOCATION="eastus"
  
 # APIs required for Defender onboarding
