@@ -27,14 +27,15 @@ jobs:
         sudo apt-get update && sudo apt-get install -y google-cloud-sdk
 
     
-    - name: Authenticate to GCP
-      env:
-            GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-      run: |
-            echo "$GCP_SA_KEY" > gcp-key.json
-            gcloud auth activate-service-account --key-file=gcp-key.json
-            gcloud config set account $(jq -r .client_email gcp-key.json)
-            gcloud config set project sbx-sentinel-mde-dev-920788
+    
+    - name: Authenticate to Google Cloud via WIF
+      uses: google-github-actions/auth@v3
+      with:
+        workload_identity_provider: "projects/1031194949050/locations/global/workloadIdentityPools/workload-pool/providers/github"
+        service_account: "microsoft-defender-for-servers@sbx-sentinel-mde-dev-920788.iam.gserviceaccount.com"
+        create_credentials_file: true
+
+
 
 
 
