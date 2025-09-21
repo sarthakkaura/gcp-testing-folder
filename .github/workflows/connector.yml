@@ -32,18 +32,6 @@ jobs:
         curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
         sudo apt-get update && sudo apt-get install -y google-cloud-sdk
 
-    
-    
-    - name: Authenticate to Google Cloud via WIF
-      uses: google-github-actions/auth@v3
-      with:
-        workload_identity_provider: "projects/1031194949050/locations/global/workloadIdentityPools/workload-pool/providers/github"
-        service_account: "microsoft-defender-for-servers@sbx-sentinel-mde-dev-920788.iam.gserviceaccount.com"
-        create_credentials_file: true
-
-
-
-
 
     - name: Install Azure CLI
       run: |
