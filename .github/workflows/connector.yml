@@ -26,28 +26,26 @@ jobs:
         curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
         sudo apt-get update && sudo apt-get install -y google-cloud-sdk
 
-    - name: Authenticate to GCP
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
-      run: |
-        echo "${GOOGLE_APPLICATION_CREDENTIALS}" > gcp-key.json
-        gcloud auth activate-service-account --key-file=gcp-key.json
-        project sbx-sentinel-mde-dev-920788
 
     - name: Install Azure CLI
       run: |
         curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
-    - name: Login to Azure
+    
+    - name: Authenticate to Azure
+      env:
+        AZURE_CLIENT_ID: "d47fb118-5c46-4069-801d-a7c945665e0f"
+        AZURE_CLIENT_SECRET: "NkG8Q~.FzKAZCNttyqvHxAwaeero5ciRepXKDa6Z"
+        AZURE_TENANT_ID: "1172494f-68e2-4743-8ebb-b6916a1c681e"
       run: |
-        az login --service-principal \
-          --username ${{ secrets.AZURE_CLIENT_ID }} \
-          --password ${{ secrets.AZURE_CLIENT_SECRET }} \
-          --tenant ${{ secrets.AZURE_TENANT_ID }}
-        az account set --subscription $AZ_SUBSCRIPTION
+            az login --service-principal \
+              --username $AZURE_CLIENT_ID \
+              --password $AZURE_CLIENT_SECRET \
+              --tenant $AZURE_TENANT_ID
+            echo "✅ Azure authentication successful."
 
     - name: Make script executable
       run: chmod +x gcp-bash.sh
 
     - name: Run onboarding script
-      run: ./onboard_gcp_defender.sh
+      run: ./gcp-bash.sh
