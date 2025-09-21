@@ -27,7 +27,7 @@ AZ_TOKEN=$(az account get-access-token --resource https://management.azure.com \
   --query accessToken -o tsv)
 
 # JSON body for connector
-BODY=$(cat <<EOF
+read -r -d '' BODY <<EOF
 {
   "location": "$AZ_LOCATION",
   "properties": {
@@ -52,4 +52,29 @@ BODY=$(cat <<EOF
         "offeringType": "DefenderForServersGcp",
         "defenderForServers": {
           "serviceAccountEmailAddress": "$DEFENDER_SA",
-         
+          "workloadIdentityProviderId": "$DEFENDER_PROVIDER_ID"
+        },
+        "mdeAutoProvisioning": {
+          "enabled": true,
+          "configuration": {}
+        },
+        "arcAutoProvisioning": {
+          "enabled": true,
+          "configuration": {}
+        },
+        "subPlan": "P2"
+      }
+    ]
+  }
+}
+EOF
+
+# Call Azure REST API
+echo "Creating connector $CONNECTOR_NAME in Azure ..."
+curl -s -X PUT \
+  -H "Authorization: Bearer $AZ_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "$BODY" \
+  "https://management.azure.com/subscriptions/$AZ_SUBSCRIPTION/resourceGroups/$AZ_RG/providers/Microsoft.Security/securityConnectors/$CONNECTOR_NAME?api-version=2023-10-01-preview"
+
+echo "✅ Connector created for project $PROJECT"
