@@ -34,6 +34,7 @@ for PROJECT in $PROJECTS; do
   BODY=$(cat <<EOF
 {
   "properties": {
+    "hierarchyIdentifier": "93604753456"
     "environmentName": "GCP",
     "environmentData": {
       "environmentType": "GcpProject",
