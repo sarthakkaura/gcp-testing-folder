@@ -3,7 +3,6 @@
 # Requires: az CLI
 
 set -euo pipefail
-
 # ====== CONFIG ======
 PROJECT="sbx-sentinel-mde-dev-920788"
 FOLDER_ID="93604753456"
